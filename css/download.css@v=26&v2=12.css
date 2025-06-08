@@ -1,0 +1,193 @@
+@media only screen and (max-width: 830px) {
+    body #d_disp{
+        flex-direction: column-reverse;
+    }
+
+    body .adbox{
+        display: none !important;
+    }
+
+    body .medialinks{
+        justify-content: space-around;
+        flex-direction: column;
+        position: initial;
+    }
+}
+
+.infosection a{
+    color: rgb(52, 152, 219);
+}
+
+.group1{
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.downloadButtons{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnDownloadWrapper, .btnDownload{
+    width: 100%;
+    max-width: 350px;
+}
+
+.btnDownload{
+    padding: 12px;
+    background-color: var(--color-background);
+    color: white;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.unc{
+    height: 1em;
+    width: 37px;
+    display: inline-block;
+    background-image: url("../images/unc.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    vertical-align: middle;
+}
+
+#d_disp .adbox{
+    margin-right: 12px; 
+    display: block;
+    height: 250px;
+}
+
+#d_disp{
+    display: flex; 
+    background-color: #39ac39;
+}
+
+main{
+	padding: 12px;
+}
+
+.section{
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+
+#d_boxadvert{
+    border: 1px solid black;
+    margin: 10px;
+    display: inline-block;
+}
+
+.downloadicon{
+    width: 1.16em;
+    height: 1.16em;
+    padding-right: 12px;
+    background-image: url(https://cdn.wearedevs.net/images/icons/w_download.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin-right: 12px;
+}
+
+.medialinks{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--padding);
+}
+
+.medialink{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    border-radius: var(--less-round);
+}
+
+.medialink img{
+    margin-right: 8px;
+    width: 1em;
+    height: 1em;
+}
+
+.infosection .adbox{
+    float: right; 
+    margin-left: var(--less-padding);
+}
+
+.url{
+	display: inline-block;
+    height: 16px;
+    width: 16px;
+    background-image: url(../icons/windows.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+.microsoftstore{
+	display: inline-block;
+    height: 16px;
+    width: 16px;
+    background-image: url(../icons/microsoftstore.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+.android{
+	display: inline-block;
+    height: 17px;
+    width: 17px;
+    background-image: url(../icons/android.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+.ios{
+	display: inline-block;
+    height: 17px;
+    width: 17px;
+    background-image: url(../icons/ios.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    background-position: center;
+}
+
+.alt-exploits{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--less-padding);
+    align-items: stretch;
+}
+
+.alt-exploits > a{
+    flex: 1;
+    min-width: 350px;
+}
+
+.alt-exploits h3{
+    font-size: 16px;
+}
+
+.alt-exploits img{
+    float: left;
+    height: 100px;
+    width: 100px;
+    margin-right: var(--less-padding);
+}

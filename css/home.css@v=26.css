@@ -1,0 +1,87 @@
+#navigationbar{
+    margin-bottom: 0;
+}
+
+.card a{
+    color: #3498db;
+}
+
+.section{
+    padding: 12px;
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.section iframe{
+    margin: 12px;
+    height: 315px;
+}
+
+h2{
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.qa{
+    margin-bottom: 30px;
+}
+
+.question{
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.answer{
+    padding-left: 50px;
+}
+
+#qna{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+#qna .card{
+    margin: 12px;
+    padding: 12px;
+    width: 100%;
+    max-width: 400px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#qna .card .question{
+    margin-bottom: 12px;
+}
+
+/* Promo section */
+
+.omnidev .header{
+    text-align: center;
+}
+
+.promos{
+    padding: 12px;
+    text-align: center;
+}
+
+.promo-btn{
+    background-color: var(--color-highlight);
+    display: inline-flex;
+    width: 120px;
+    padding: 5px;
+    text-align: center;
+}
+
+.promo-btn img{
+    height: 20px;
+}
+
+.promo-btn p{
+    flex: 1;
+}

@@ -1,0 +1,39 @@
+.wrapper {
+    display: flex;
+}
+
+main {
+    min-width: 400px;
+    max-width: 850px;
+    margin: auto;
+}
+
+.CodeMirror {
+    border-radius: 8px;
+    border: none !important;
+}
+
+.btns-output .button, .btn-obfuscate{
+    min-width: 184px;
+    padding: var(--padding) 0 var(--padding) 0;
+}
+
+.btn-obfuscate {
+    margin: auto;
+}
+
+.btns-output {
+    display: none;
+    justify-content: space-around;
+    gap: var(--padding);
+    flex-wrap: wrap;
+}
+
+.status {
+    transition: opacity 0.4s;
+    opacity: 0;
+}
+
+img {
+    max-width: 100%;
+}
