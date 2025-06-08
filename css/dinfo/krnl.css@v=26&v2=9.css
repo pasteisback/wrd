@@ -1,0 +1,152 @@
+@media only screen and (max-width: 1102px) {
+    body #intro{
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+
+    body #instructions img{
+        display: none;
+        height: 150px;
+        width: 150px;
+    }
+    
+    body .adsensebox{
+        display: none;
+    }
+
+    body .adbox{
+        display: none;
+    }
+
+    body #intro #logo{
+        margin-bottom: var(--padding);
+    }
+
+    body .download-options {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+main{
+    padding: 12px;
+}
+
+.section{
+    padding: 12px;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+}
+
+.section > div:first-of-type{
+    flex: 1;
+}
+
+#intro{
+    display: flex;
+}
+
+#intro #logo {
+    margin-right: 12px;
+    height: 100%;
+}
+
+#intro .medialink{
+    margin-left: var(--padding);
+}
+
+#intro > div {
+    display: flex;
+    flex-direction: column;
+}
+
+#intro > div > p{
+    flex: 1;
+}
+
+main {
+    position: relative;
+}
+
+.carouselshow {
+    position: relative;
+    overflow: hidden;
+}
+
+.carouselshow img{
+    margin: 0px 12px;
+    max-height: 300px;
+}
+
+/* faq */
+.qa{
+    margin-bottom: 12px;
+    padding: 12px;
+}
+
+.qa .q{
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+hr{
+    margin: 12px 0px;
+    background-color: #dddddd;
+    height: 1px;
+}
+
+#hook a, #faq a{
+    color: rgb(52, 152, 219);
+    text-decoration: underline;
+}
+
+.adbox {
+    float: right;
+    margin-left: var(--padding);
+}
+
+.viet-icon{
+    width: 22px;
+    height: 22px;
+}
+
+.download-options {
+    display: flex;
+    justify-content: right;
+    gap: var(--padding);
+}
+
+.downloadbtn{
+    background-color: var(--color-accent);
+    color: white;
+    font-weight: 400;
+    padding: 8px 20px;
+    font-size: 20px;
+    width: 188px;
+    text-align: center;
+    justify-content: center; /* Considers verticalCenter class */
+}
+
+.android{
+	display: inline-block;
+    height: 1em;
+    width: 1em;
+    background-image: url(http://wearedevs.net/icons/android.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+.ios{
+	display: inline-block;
+    height: 1em;
+    width: 1em;
+    background-image: url(http://wearedevs.net/icons/ios.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    background-position: center;
+}

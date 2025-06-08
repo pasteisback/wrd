@@ -1,0 +1,76 @@
+@media only screen and (max-width: 1102px) {
+    body #intro{
+        flex-direction: column;
+        text-align: center;
+    }
+
+    body #instructions img{
+        display: none;
+    }
+    
+    body .adsensebox{
+        display: none;
+    }
+
+    body .downloadbtn{
+        float: none;
+    }
+}
+
+main{
+    padding: 12px;
+}
+
+.section{
+    padding: 12px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+#intro{
+    display: flex;
+    align-items: center;
+}
+
+#intro img {
+    margin-right: 12px;
+    height: 150px;
+    width: 150px;
+}
+
+.downloadbtn{
+    background-color: #61CA87;
+    color: white;
+    font-weight: 400;
+    padding: 8px 20px;
+    font-size: 20px;
+    float: right;
+}
+
+.carouselshow img{
+    margin: 0px 12px;
+    max-height: 300px;
+}
+
+/* faq */
+.qa{
+    margin-bottom: 12px;
+    padding: 12px;
+}
+
+.qa .q{
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+hr{
+    margin: 12px 0px;
+    background-color: #dddddd;
+    height: 1px;
+}
+
+#hook a, #faq a{
+    color: rgb(52, 152, 219);
+    text-decoration: underline;
+}
