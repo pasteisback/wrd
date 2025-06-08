@@ -1,0 +1,81 @@
+@media only screen and (max-width: 865px) {
+    body .boxad{
+        display: none !important;
+    }
+}
+
+main{
+    padding: 12px;
+    flex: 1;
+    padding-top: 0; /* Recommended if using garland */
+}
+
+/*.adsbygoogle{ border: 1px solid gray; }*/
+
+.boxad{
+	display:block;
+	float:right;
+	padding: var(--padding) 0 0 var(--padding);
+}
+
+.boxad > *{
+	margin-bottom: var(--padding);
+	text-align: center;
+}
+
+.boxad > a{
+	padding: 14px var(--padding);
+}
+
+#section-title{
+    text-align: center;
+}
+
+#section-title a{
+    font-size: inherit;
+    text-decoration: underline;
+}
+
+.adsbygoogle{
+	width: 100%;
+    text-align: center;;
+}
+
+.releases{
+    margin-top: 12px;
+	display: flex; 
+	justify-content: center; 
+	flex-wrap: wrap;
+}
+
+.release-card{
+    width: 250px;
+    padding: 12px;
+    height: 200px;
+    flex-direction: column;
+    margin: 5px;
+    position: relative;
+    transition: all .1s ease-in-out;
+	display: inline-flex;
+	overflow: hidden;
+}
+
+.release-title{
+    font-size: 20px;
+}
+
+.release-developer{
+    margin-bottom: 2px;
+}
+
+.release-description{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.download-button{
+    font-weight: 400;
+    text-align: right;
+}
