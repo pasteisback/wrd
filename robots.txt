@@ -1,0 +1,3 @@
+User-agent: *
+Sitemap: https://wearedevs.net/sitemap.xml
+Sitemap: https://forum.example.com/sitemap.xml

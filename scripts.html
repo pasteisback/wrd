@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+		<meta name="keywords" content="Exploits, dll, hacks, cheats, developers, social, media" />
+        <meta name="description" content="Find Lua scripts for Roblox games with WeAreDevs." />
+	
+		<title>Lua Scripts - WeAreDevs</title>
+		
+		<link rel="shortcut icon" href="http://wearedevs.net/favicon.ico" />
+<link href="http://wearedevs.net/css/main.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/themes/night.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/navheader.css?v=26&amp;v2=5" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://wearedevs.net/js/timestamp.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46VWDGRLXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46VWDGRLXJ');
+</script>
+		<link href="css/scripts/index.css@v=26.css" rel="stylesheet" type="text/css">
+	</head>
+	<body class="container">
+		<header id="navigationbar" class="border1-bottom">
+    <span class="menu-toggle "></span>
+    <a id="foologo" href="http://wearedevs.net/home" title="WeAreDevs">WeAreDevs</a>
+    <ul class="navItems">
+        <li class='navItem'>
+            <a href="index.html" title="Featured releases page">Exploits</a>
+        </li>
+        <li class='navItem'>
+            <a href="scripts.html" title="Featured scripts page">Scripts</a>
+        </li>
+        <li class='navItem'>
+            <a href="obfuscator.html" title="Protect your LuaU scripts">Lua Obfuscator</a>
+        </li>
+        <li class='navItem'>
+			<a title="Speak with the community" href="https://forum.wearedevs.net" class="icon community"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Visual demonstration of our exploits" href="https://www.youtube.com/@WeAreDevsExploits" class="icon youtube"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Alternative contact with the community" href="discord.html" class="icon discord"></a>
+        </li>
+        
+        <li class='navItem' style="margin-left: auto;"><a href="https://forum.wearedevs.net/login">Login</a></li>
+        
+    </ul>
+	
+	<script>
+        //Used to send logout request to API
+		function logout(){
+            if(!confirm("You are about to logout")) return
+
+            fetch('https://forum.wearedevs.net/api/account/logout', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) window.location.reload()
+                else {
+                    if(res.reason) alert("Error: " + res.reason)
+                    else alert("An unexpected error occured...")
+                }
+            })
+            .catch(()=>alert("Failed to contact the server or an unexpected response was received..."))
+        }
+
+        function DeleteNotifications(id){
+            return fetch('/api/notifications', {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id
+                })
+            })
+        }
+        
+        function DeleteAllNotifs(el){
+            //The server will default to delete everything because there is no specified id
+            DeleteNotifications()
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    document.getElementsByClassName("notifications")[0].innerHTML = "<p>No notifications...</p>"
+                    document.getElementsByClassName("notifcount")[0].style.display = "none"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                    el.style.display = "none"
+                }
+                //There should never be an error response
+                else alert("Failed to delete notification. Please contact an admin!")
+            })
+            .catch(e => alert("Failed to contact server"))
+        }
+
+        // Listen to all clicks on the document
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('message-notif')){
+                var parent = event.target.parentElement.parentElement
+                var id = parent.getAttribute("data-id")
+
+                DeleteNotifications(id)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success === true){
+                        var numNotifs = parent.parentElement.childElementCount
+                        document.getElementsByClassName("notifcount")[0].innerHTML = numNotifs - 1
+                        if(numNotifs <= 1){
+                            parent.parentElement.innerHTML = "No notifications"
+                            document.getElementsByClassName("notifcount")[0].remove()
+                            document.getElementsByClassName("deleteallnotifs")[0].remove()
+                            document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                        }
+                        parent.remove()
+                    }
+                })
+                .catch(e =>{})
+            }
+            //Navigation options display toggle (Mobile view)
+            else if(event.target.classList.contains('menu-toggle')){
+                if(document.getElementsByClassName("navItems")[0].style.display !== "flex"){
+                    document.getElementsByClassName("navItems")[0].style.display = "flex"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                }
+                else {
+                    document.getElementsByClassName("navItems")[0].style.display = "none"
+                    if(document.getElementsByClassName("notification").length > 0) 
+                        document.getElementsByClassName("menu-toggle")[0].classList.add("menu-toggle-notif")
+                }
+            }
+            //Drop-menu toggle
+            else if(event.target.classList.contains('dropmenu-title')){
+                if(event.target.parentElement.getElementsByClassName("menu")[0].style.display !== "block"){
+                    event.target.parentElement.getElementsByClassName("menu")[0].style.display = "block"
+                }
+                else event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+
+                event.target.parentElement.onmouseleave = () => event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+            } 
+        })
+    </script>
+</header>
+		<main>
+			<div>
+				<div class="boxad" style="display:flex; flex-direction:column;padding-left:0;">
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+					<a class="border1 round" href="scripts.html">Featured Scripts</a>
+					<a class="border1 round" href="http://wearedevs.net/forum/scripts">Community Scripts</a>
+					<a class="border1 round" href="https://forms.gle/zE8yUNp5pJYPXxXZA" target="_blank">Submit Your Content</a>
+					<a class="border1 round" href="http://wearedevs.net/forum/debugging">Search For Help</a>
+					<a class="border1 round" href="http://wearedevs.net/forum/complaints">Report A Problem</a>
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+				</div>
+				<div id="section-title">
+					<h1>Scripts</h1>
+                    <p>For use in Lua executors</p>
+                    <p style="color: gray; font-size: 13px;">Share or search for scripts on our <a href="http://wearedevs.net/forum/scripts">script community</a>.<p>
+				</div>
+				<div class="releases">
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Dex Explorer</h2>
+                        <p class="release-developer">By Babyhamsta</p>
+                        <div class="release-description">
+                            <p>A powerful game explorer GUI. Shows every instance of the game and all their properties. Useful for developers.</p>
+                        </div>
+                        <a class="download-button" href="scripts/d/610067c537cd63b05ca78e6a/Dex&#32;Explorer.html" title="Download Dex Explorer">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Fly</h2>
+                        <p class="release-developer">By (Unknown)</p>
+                        <div class="release-description">
+                            <p>Why walk when you can fly?</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610067c537cd63b05ca78e6b/Fly" title="Download Fly">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Aimbot</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Snaps aim to player heads. Featuring wall detection, team check, and mouse movement bypass.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610067c537cd63b05ca78e6c/Aimbot" title="Download Aimbot">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Gravity Switch</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Press "e" to toggle the game's gravity</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610067c537cd63b05ca78e6d/Gravity&#32;Switch" title="Download Gravity Switch">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Focus Anti-AFK</h2>
+                        <p class="release-developer">By Shawnjbragdon</p>
+                        <div class="release-description">
+                            <p>Even when you switch to another window, you will appear to be active.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61006a0437cd63b05ca78e6f/Focus&#32;Anti-AFK" title="Download Focus Anti-AFK">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Demonfall Trainer</h2>
+                        <p class="release-developer">By solicitors</p>
+                        <div class="release-description">
+                            <p>A Demonfall trainer featuring a mob ESP, auto breath, god mode, anti-debuffs, and trinket farm.</p>
+                        </div>
+                        <a class="download-button" href="scripts/d/61006e4737cd63b05ca78e70/Demonfall&#32;Trainer.html" title="Download Demonfall Trainer">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Phantom Forces Hitbox Expander</h2>
+                        <p class="release-developer">By gamermanaway</p>
+                        <div class="release-description">
+                            <p>Makes enemies easier to hit by enlarging their hitbox.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6100714537cd63b05ca78e71/Phantom&#32;Forces&#32;Hitbox&#32;Expander" title="Download Phantom Forces Hitbox Expander">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Timber - Autofarm</h2>
+                        <p class="release-developer">By scde</p>
+                        <div class="release-description">
+                            <p>Slowly, but surely automatically farms in the game Timber.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610073a937cd63b05ca78e72/Timber&#32;-&#32;Autofarm" title="Download Timber - Autofarm">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Apoc2 Map Radar</h2>
+                        <p class="release-developer">By I C E E</p>
+                        <div class="release-description">
+                            <p>Puts all other players onto your mini-map in Apoc Rising 2.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610075bb37cd63b05ca78e73/Apoc2&#32;Map&#32;Radar" title="Download Apoc2 Map Radar">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">World Zero Kill Aura</h2>
+                        <p class="release-developer">By I C E E</p>
+                        <div class="release-description">
+                            <p>Adds a kill aura for the game, World // Zero.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6100776137cd63b05ca78e74/World&#32;Zero&#32;Kill&#32;Aura" title="Download World Zero Kill Aura">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Critical Strike GUI</h2>
+                        <p class="release-developer">By I C E E</p>
+                        <div class="release-description">
+                            <p>Displays a cheat trainer to use for the game, Critical Strike.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610078bf37cd63b05ca78e75/Critical&#32;Strike&#32;GUI" title="Download Critical Strike GUI">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">PF Easy Fly</h2>
+                        <p class="release-developer">By gamermanaway</p>
+                        <div class="release-description">
+                            <p>Enables you to fly through the game, Phantom Forces.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610079d737cd63b05ca78e76/PF&#32;Easy&#32;Fly" title="Download PF Easy Fly">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">RoCitizens Infinite Money</h2>
+                        <p class="release-developer">By Mein</p>
+                        <div class="release-description">
+                            <p>Drown in cash while playing RoCitizens.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61015a03a30fbe5f482ea04b/RoCitizens&#32;Infinite&#32;Money" title="Download RoCitizens Infinite Money">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Click Teleport</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Left ctrl + click on any spot on the game and you will immediately teleport to it!</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61080a12bc0ef711ad5cb774/Click&#32;Teleport" title="Download Click Teleport">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Human Flashlight</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Turns your character into a private flashlight.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610812d2bc0ef711ad5cb775/Human&#32;Flashlight" title="Download Human Flashlight">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Remove Legs</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Removes the legs from your player's character.</p>
+                        </div>
+                        <a class="download-button" href="scripts/d/6108159cbc0ef711ad5cb776/Remove&#32;Legs.html" title="Download Remove Legs">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Float Character</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Makes your player's character float in the air.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610817dcbc0ef711ad5cb777/Float&#32;Character" title="Download Float Character">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">High Hips</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Walk like normal, but a little "taller".</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61081aa8fd8901d6c92747a1/High&#32;Hips" title="Download High Hips">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">BTools</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Gives your player the old system of building tools.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61081d0bfd8901d6c92747a2/BTools" title="Download BTools">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Night Time Toggle</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Changes the time of day so that it is night.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61081fc3fd8901d6c92747a3/Night&#32;Time&#32;Toggle" title="Download Night Time Toggle">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Limp Character</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Messes with your characters joints so it walks with a limp.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610823c9fd8901d6c92747a4/Limp&#32;Character" title="Download Limp Character">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Blockhead</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Turns your character's head into a plain block.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61082503fd8901d6c92747a5/Blockhead" title="Download Blockhead">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Highlight Player</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Places a selection box around the selected player.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6108293efd8901d6c92747a6/Highlight&#32;Player" title="Download Highlight Player">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Remove Arms</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Removes the arms from your player's character.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61082b1ab5ba5eb625c37736/Remove&#32;Arms" title="Download Remove Arms">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Invisible Character</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Makes your character's baseparts fully transparent.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61082c73b5ba5eb625c37737/Invisible&#32;Character" title="Download Invisible Character">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Magnetize To Player</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Makes your character magnetically attracted to another player.</p>
+                        </div>
+                        <a class="download-button" href="scripts/d/6108383db5ba5eb625c37738/Magnetize&#32;To&#32;Player.html" title="Download Magnetize To Player">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Teleport To Player</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Teleports your player's character to the selected player's character</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6109a5a4a11f86fa3a1ffb90/Teleport&#32;To&#32;Player" title="Download Teleport To Player">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Unlock Workspace Baseparts</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Unlocks all bricks in the game so you can use btools on them.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/610a09ecfcd51025e539dd31/Unlock&#32;Workspace&#32;Baseparts" title="Download Unlock Workspace Baseparts">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Universal ESP and Aimbot.txt</h2>
+                        <p class="release-developer">By (Unknown)</p>
+                        <div class="release-description">
+                            <p>Introduces an ESP and aimbot for all games.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/61115b9c4c9e8c2662d20a9c/Universal&#32;ESP&#32;and&#32;Aimbot.txt" title="Download Universal ESP and Aimbot.txt">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">WRD ESP</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Draws boxes around other players. As used in JJSploit.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/611c5e8f37f27bdc436897be/WRD&#32;ESP" title="Download WRD ESP">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Ez Hub</h2>
+                        <p class="release-developer">By Ez Industries</p>
+                        <div class="release-description">
+                            <p>Multi-game script hub with a beautifully made UI.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/616b095abe0efe60c3e0fa98/Ez&#32;Hub" title="Download Ez Hub">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Owl Hub</h2>
+                        <p class="release-developer">By CriShoux &amp; Chrome</p>
+                        <div class="release-description">
+                            <p>One of the most popular script hubs. 30+ games.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6171b5746ec8254a535573d7/Owl&#32;Hub" title="Download Owl Hub">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Infinite Jump</h2>
+                        <p class="release-developer">By WeAreDevs</p>
+                        <div class="release-description">
+                            <p>Spam the spacebar to jump as high as you want.</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6228f370e85d26dd94af7537/Infinite&#32;Jump" title="Download Infinite Jump">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Infinite Yield</h2>
+                        <p class="release-developer">By Edge</p>
+                        <div class="release-description">
+                            <p>A command line script hub with over 6 years of development</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/6230a7a6ddc521ac437ea25f/Infinite&#32;Yield" title="Download Infinite Yield">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Solara Hub v3</h2>
+                        <p class="release-developer">By samuraa1</p>
+                        <div class="release-description">
+                            <p>A script hub of script hubs for several games</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/67d9b5669a48d7b1eba83c50/Solara&#32;Hub&#32;v3" title="Download Solara Hub v3">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Fisch Hub</h2>
+                        <p class="release-developer">By BlackHub</p>
+                        <div class="release-description">
+                            <p>Auto fish and teleport in the game, Fisch</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/67d9b62a9a48d7b1eba83c51/Fisch&#32;Hub" title="Download Fisch Hub">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Blox Fruits Hub</h2>
+                        <p class="release-developer">By Mars</p>
+                        <div class="release-description">
+                            <p>Automate behavior in game</p>
+                        </div>
+                        <a class="download-button" href="scripts/d/67d9b66d9a48d7b1eba83c52/Blox&#32;Fruits&#32;Hub.html" title="Download Blox Fruits Hub">Download</a>
+					</div>
+					
+					
+					<div class="release-card round border1">
+                        <h2 class="release-title">Murder Myster 2 Hub.</h2>
+                        <p class="release-developer">By Vertex</p>
+                        <div class="release-description">
+                            <p>Automate behavior in game</p>
+                        </div>
+                        <a class="download-button" href="http://wearedevs.net/scripts/d/67d9b6ef9a48d7b1eba83c53/Murder&#32;Myster&#32;2&#32;Hub." title="Download Murder Myster 2 Hub.">Download</a>
+					</div>
+					
+				</div>
+			</div>
+		</main>
+		<style>
+footer{
+	margin-top: 50px;
+	padding: 10px 50px;
+	color: gray;
+	text-align: center;
+}
+
+.footerlinks{
+	display: inline-flex;
+	padding: 0;
+}
+
+.footerlinks li{
+	list-style-type: none;
+	margin-left: 12px;
+}
+
+.footerlinks li:first-of-type{
+	margin: 0;
+}
+
+/* Slider */
+.switch{
+	margin-left: var(--less-padding);
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 28px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 25px;
+}
+
+.slider:before{
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .3s;
+	transition: .3s;
+	border-radius: 50%;
+}
+
+.switch input:checked + .slider:before{
+  	margin-left: 22px;
+}
+
+.switch input:checked + .slider{
+    background-color: #2ecc71;
+}
+</style>
+<footer>
+	<ul class="footerlinks">
+		<li><a href="http://wearedevs.net/terms-of-service" title="Privacy Policy">Terms of Use</a></li>
+		<li><a href="http://wearedevs.net/privacy" title="Privacy Policy">Privacy</a></li>
+	</ul>
+	<br/>
+	<br/>
+	<p>© <script>document.write(new Date().getFullYear())</script> WeAreDevs</p>
+</footer>
+
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			// Push notifications setup
+			
+			var registration = null
+			
+			function urlBase64ToUint8Array(base64String) {
+			  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+			  const base64 = (base64String + padding)
+				.replace(/\-/g, '+')
+				.replace(/_/g, '/')
+			  ;
+			  const rawData = window.atob(base64);
+			  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+			}
+			
+			function askPermission() {
+			  return new Promise(function(resolve, reject) {
+				const permissionResult = Notification.requestPermission(function(result) {
+				  resolve(result);
+				});
+
+				if (permissionResult) {
+				  permissionResult.then(resolve, reject);
+				}
+			  })
+			  .then(async function(permissionResult) {
+				if (permissionResult === 'granted') {
+					//Notifications are enabled
+					//Create subscription
+					const subscribeOptions = {
+					  userVisibleOnly: true,
+					  applicationServerKey: urlBase64ToUint8Array(
+						'BGyra8TIIln-swj30Hi4ZulNFcTe_EcmhqhIs0W1gMQv6ufiEorqnE-KvcgIO6kIfia6Jq0XYdHGv10jUdhiEko'
+					  )
+					};
+
+					let pushSubscription = await registration.pushManager.subscribe(subscribeOptions);
+					
+					$.ajax({
+						type: "POST",
+						url: '/api/notifications/subscribe',
+						data: JSON.stringify(pushSubscription),
+						processData: false,
+						contentType: "application/json",
+						dataType: "json"
+					});
+				}
+				else {
+				  throw new Error('We weren\'t granted permission.');
+				}
+			  });
+			}
+			
+			
+			if ('serviceWorker' in navigator) { 
+				//Service worker is supported on this browser
+				
+				//Register the service worker
+				navigator.serviceWorker.register('/js/service-worker.js')
+				.then(function(_registration) {
+					console.log('Service worker successfully registered.');
+					
+					registration = _registration
+					
+					if ('PushManager' in window) { 
+						//Push manager is supported on this browser(Used for push notifications)
+						if (Notification.permission !== "granted") {
+							askPermission();
+						} //else push notifications are already enabled
+					}
+				})
+				.catch(function(err) {
+					console.warn('Unable to register service worker.', err);
+				});
+			}
+		</script>
+		<style>
+			._hj-f5b2a1eb-9b07_widget_footer{
+				display: none !important;
+			}
+		</style>
+	</body>
+</html>

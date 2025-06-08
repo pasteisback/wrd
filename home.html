@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+		<meta name="keywords" content="wearedevs, home, latest" />
+        <meta name="description" content="Learn more about what WeAreDevs is." />
+	
+		<title>Home - WeAreDevs</title>
+		
+		<link rel="shortcut icon" href="favicon.ico" />
+<link href="css/main.css@v=26&amp;v2=3.css" rel="stylesheet" type="text/css">
+<link href="css/themes/night.css@v=26&amp;v2=3.css" rel="stylesheet" type="text/css">
+<link href="css/navheader.css@v=26&amp;v2=5.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="js/timestamp.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46VWDGRLXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46VWDGRLXJ');
+</script>
+		<link href="css/home.css@v=26.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+        
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        <script>
+			$(document).ready(function(){
+                $('.carouselshow').slick({
+                    centerMode: true,
+                    variableWidth: true,
+					dots: true,
+                });
+            })
+        </script>
+	</head>
+	<body class="container">
+		<header id="navigationbar" class="border1-bottom">
+    <span class="menu-toggle "></span>
+    <a id="foologo" href="home.html" title="WeAreDevs">WeAreDevs</a>
+    <ul class="navItems">
+        <li class='navItem'>
+            <a href="https://wearedevs.net/exploits" title="Featured releases page">Exploits</a>
+        </li>
+        <li class='navItem'>
+            <a href="https://wearedevs.net/scripts" title="Featured scripts page">Scripts</a>
+        </li>
+        <li class='navItem'>
+            <a href="https://wearedevs.net/obfuscator" title="Protect your LuaU scripts">Lua Obfuscator</a>
+        </li>
+        <li class='navItem'>
+			<a title="Speak with the community" href="https://forum.wearedevs.net" class="icon community"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Visual demonstration of our exploits" href="https://www.youtube.com/@WeAreDevsExploits" class="icon youtube"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Alternative contact with the community" href="discord.html" class="icon discord"></a>
+        </li>
+        
+        <li class='navItem' style="margin-left: auto;"><a href="https://forum.wearedevs.net/login">Login</a></li>
+        
+    </ul>
+	
+	<script>
+        //Used to send logout request to API
+		function logout(){
+            if(!confirm("You are about to logout")) return
+
+            fetch('https://forum.wearedevs.net/api/account/logout', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) window.location.reload()
+                else {
+                    if(res.reason) alert("Error: " + res.reason)
+                    else alert("An unexpected error occured...")
+                }
+            })
+            .catch(()=>alert("Failed to contact the server or an unexpected response was received..."))
+        }
+
+        function DeleteNotifications(id){
+            return fetch('/api/notifications', {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id
+                })
+            })
+        }
+        
+        function DeleteAllNotifs(el){
+            //The server will default to delete everything because there is no specified id
+            DeleteNotifications()
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    document.getElementsByClassName("notifications")[0].innerHTML = "<p>No notifications...</p>"
+                    document.getElementsByClassName("notifcount")[0].style.display = "none"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                    el.style.display = "none"
+                }
+                //There should never be an error response
+                else alert("Failed to delete notification. Please contact an admin!")
+            })
+            .catch(e => alert("Failed to contact server"))
+        }
+
+        // Listen to all clicks on the document
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('message-notif')){
+                var parent = event.target.parentElement.parentElement
+                var id = parent.getAttribute("data-id")
+
+                DeleteNotifications(id)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success === true){
+                        var numNotifs = parent.parentElement.childElementCount
+                        document.getElementsByClassName("notifcount")[0].innerHTML = numNotifs - 1
+                        if(numNotifs <= 1){
+                            parent.parentElement.innerHTML = "No notifications"
+                            document.getElementsByClassName("notifcount")[0].remove()
+                            document.getElementsByClassName("deleteallnotifs")[0].remove()
+                            document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                        }
+                        parent.remove()
+                    }
+                })
+                .catch(e =>{})
+            }
+            //Navigation options display toggle (Mobile view)
+            else if(event.target.classList.contains('menu-toggle')){
+                if(document.getElementsByClassName("navItems")[0].style.display !== "flex"){
+                    document.getElementsByClassName("navItems")[0].style.display = "flex"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                }
+                else {
+                    document.getElementsByClassName("navItems")[0].style.display = "none"
+                    if(document.getElementsByClassName("notification").length > 0) 
+                        document.getElementsByClassName("menu-toggle")[0].classList.add("menu-toggle-notif")
+                }
+            }
+            //Drop-menu toggle
+            else if(event.target.classList.contains('dropmenu-title')){
+                if(event.target.parentElement.getElementsByClassName("menu")[0].style.display !== "block"){
+                    event.target.parentElement.getElementsByClassName("menu")[0].style.display = "block"
+                }
+                else event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+
+                event.target.parentElement.onmouseleave = () => event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+            } 
+        })
+    </script>
+</header>
+		<br>
+		<main>
+			<h2 style="text-align: center;">Questions and Answers</h2>
+			<div id="qna" class="section">
+				<div class="section card border2 border1 round">
+					<p class="question"><strong>What Is A Roblox Exploit?</strong></p>
+					<p style="text-align: center;">Exploits found on WeAreDevs are typically used to manipulate a game in your favor. They come in various forms, such as DLL files, command lines, plain Lua scripts, or an on-screen GUI.</p>
+				</div>
+				<div class="section card border2 border1 round">
+					<p class="question"><strong>Is WeAreDevs Safe?</strong></p>
+					<p style="text-align: center;">WeAreDevs is NOT a malicious website. Our exploits are misunderstood by antiviruses due to their nature of software manipulation. The websites and people who say otherwise are misinformed and wrong. Read more <a href="https://forum.wearedevs.net/t/572">here</a>.</p>
+				</div>
+				<div class="section card border2 border1 round">
+					<p class="question"><strong>Can I Get Banned For Using A Roblox Exploit?</strong></p>
+					<p style="text-align: center;">Yes, you can get banned. We always advise using throwaway accounts. However, we do take measures to prevent automatic detection. Still, it is risky to rely on anti-detection. You should always be discreet in your cheating, otherwise you risk other players reporting you.</p>
+				</div>
+				<div class="section card border2 border1 round">
+					<p class="question"><strong>Where Can I Get Help?</strong></p>
+					<p style="text-align: center;">There is no dedicated support, however, there is a community with people who may be willing to help. Check out the forum <a href="https://forum.wearedevs.net">here</a>.</p>
+				</div>
+				<div id="submission" class="section card border2 border1 round">
+					<p class="question"><strong>How Do I Submit An Exploit Or Script?</strong></p>
+					<p style="text-align: center;">Post it on the forum. Software should be posted <a href="https://forum.wearedevs.net/c/6">here</a>, while scripts should be posted <a href="https://forum.wearedevs.net/c/7">here</a>. Be sure to include as much information as you can. Such as what your popular traffic sources include. Popular products may submit using <a href="https://forum.wearedevs.net/t/9765">these instructions</a>.</p>
+				</div>
+			</div>
+			<div class="section omnidev gapchildren">
+				<div class="header gapchildren">
+					<h2>Check out Omnidev</h2>
+					<p>Become an all around developer with these tutorials!</p>
+					<div class="promos">
+						<a href="https://www.youtube.com/c/Omnidev_?sub_confirmation=1" target="_blank" class="promo-btn youtube border1 lessRound verticalCenter">
+							<img src="images/youtube.svg" alt="#">
+							<p>YouTube</p>
+						</a>
+						<a href="https://theomnidev.com" target="_blank" class="promo-btn border1 lessRound verticalCenter">
+							<img src="https://cdn.wearedevs.net/images/icons/domain.png" alt="#">
+							<p>Blog</p>
+						</a>
+						<a href="https://twitter.com/Omnidev_" target="_blank" class="promo-btn twitter border1 lessRound verticalCenter">
+							<img src="https://cdn.wearedevs.net/images/icons/twitter.png" alt="#">
+							<p>Twitter</p>
+						</a>
+					</div>
+				</div>
+				<div class="carouselshow videos">
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/qXzJNEVoQiY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/UbQBOkVyB1I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/JhZzUkU0m6I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+			</div>
+		</main>
+		<style>
+footer{
+	margin-top: 50px;
+	padding: 10px 50px;
+	color: gray;
+	text-align: center;
+}
+
+.footerlinks{
+	display: inline-flex;
+	padding: 0;
+}
+
+.footerlinks li{
+	list-style-type: none;
+	margin-left: 12px;
+}
+
+.footerlinks li:first-of-type{
+	margin: 0;
+}
+
+/* Slider */
+.switch{
+	margin-left: var(--less-padding);
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 28px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 25px;
+}
+
+.slider:before{
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .3s;
+	transition: .3s;
+	border-radius: 50%;
+}
+
+.switch input:checked + .slider:before{
+  	margin-left: 22px;
+}
+
+.switch input:checked + .slider{
+    background-color: #2ecc71;
+}
+</style>
+<footer>
+	<ul class="footerlinks">
+		<li><a href="terms-of-service.html" title="Privacy Policy">Terms of Use</a></li>
+		<li><a href="https://wearedevs.net/privacy" title="Privacy Policy">Privacy</a></li>
+	</ul>
+	<br/>
+	<br/>
+	<p>© <script>document.write(new Date().getFullYear())</script> WeAreDevs</p>
+</footer>
+		
+	</body>
+</html>

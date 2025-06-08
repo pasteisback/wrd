@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+		<meta name="keywords" content="wearedevs, home, latest" />
+        <meta name="description" content="Learn more about what WeAreDevs is." />
+	
+		<title>LuaU Obfuscator - WeAreDevs</title>
+		
+		<link rel="shortcut icon" href="http://wearedevs.net/favicon.ico" />
+<link href="http://wearedevs.net/css/main.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/themes/night.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/navheader.css?v=26&amp;v2=5" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://wearedevs.net/js/timestamp.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46VWDGRLXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46VWDGRLXJ');
+</script>
+		<link href="css/obfuscator.css@v=26.css" rel="stylesheet" type="text/css">
+
+		 <!-- CodeMirror CSS -->
+		 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+		 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+
+	 
+		 <style>
+			 .CodeMirror {
+				 height: 400px;
+				 border: 1px solid #ccc;
+			 }
+		 </style>
+	</head>
+	<body class="container">
+		<header id="navigationbar" class="border1-bottom">
+    <span class="menu-toggle "></span>
+    <a id="foologo" href="http://wearedevs.net/home" title="WeAreDevs">WeAreDevs</a>
+    <ul class="navItems">
+        <li class='navItem'>
+            <a href="index.html" title="Featured releases page">Exploits</a>
+        </li>
+        <li class='navItem'>
+            <a href="scripts.html" title="Featured scripts page">Scripts</a>
+        </li>
+        <li class='navItem'>
+            <a href="obfuscator.html" title="Protect your LuaU scripts">Lua Obfuscator</a>
+        </li>
+        <li class='navItem'>
+			<a title="Speak with the community" href="https://forum.wearedevs.net" class="icon community"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Visual demonstration of our exploits" href="https://www.youtube.com/@WeAreDevsExploits" class="icon youtube"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Alternative contact with the community" href="discord.html" class="icon discord"></a>
+        </li>
+        
+        <li class='navItem' style="margin-left: auto;"><a href="https://forum.wearedevs.net/login">Login</a></li>
+        
+    </ul>
+	
+	<script>
+        //Used to send logout request to API
+		function logout(){
+            if(!confirm("You are about to logout")) return
+
+            fetch('https://forum.wearedevs.net/api/account/logout', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) window.location.reload()
+                else {
+                    if(res.reason) alert("Error: " + res.reason)
+                    else alert("An unexpected error occured...")
+                }
+            })
+            .catch(()=>alert("Failed to contact the server or an unexpected response was received..."))
+        }
+
+        function DeleteNotifications(id){
+            return fetch('/api/notifications', {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id
+                })
+            })
+        }
+        
+        function DeleteAllNotifs(el){
+            //The server will default to delete everything because there is no specified id
+            DeleteNotifications()
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    document.getElementsByClassName("notifications")[0].innerHTML = "<p>No notifications...</p>"
+                    document.getElementsByClassName("notifcount")[0].style.display = "none"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                    el.style.display = "none"
+                }
+                //There should never be an error response
+                else alert("Failed to delete notification. Please contact an admin!")
+            })
+            .catch(e => alert("Failed to contact server"))
+        }
+
+        // Listen to all clicks on the document
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('message-notif')){
+                var parent = event.target.parentElement.parentElement
+                var id = parent.getAttribute("data-id")
+
+                DeleteNotifications(id)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success === true){
+                        var numNotifs = parent.parentElement.childElementCount
+                        document.getElementsByClassName("notifcount")[0].innerHTML = numNotifs - 1
+                        if(numNotifs <= 1){
+                            parent.parentElement.innerHTML = "No notifications"
+                            document.getElementsByClassName("notifcount")[0].remove()
+                            document.getElementsByClassName("deleteallnotifs")[0].remove()
+                            document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                        }
+                        parent.remove()
+                    }
+                })
+                .catch(e =>{})
+            }
+            //Navigation options display toggle (Mobile view)
+            else if(event.target.classList.contains('menu-toggle')){
+                if(document.getElementsByClassName("navItems")[0].style.display !== "flex"){
+                    document.getElementsByClassName("navItems")[0].style.display = "flex"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                }
+                else {
+                    document.getElementsByClassName("navItems")[0].style.display = "none"
+                    if(document.getElementsByClassName("notification").length > 0) 
+                        document.getElementsByClassName("menu-toggle")[0].classList.add("menu-toggle-notif")
+                }
+            }
+            //Drop-menu toggle
+            else if(event.target.classList.contains('dropmenu-title')){
+                if(event.target.parentElement.getElementsByClassName("menu")[0].style.display !== "block"){
+                    event.target.parentElement.getElementsByClassName("menu")[0].style.display = "block"
+                }
+                else event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+
+                event.target.parentElement.onmouseleave = () => event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+            } 
+        })
+    </script>
+</header>
+		<div class="wrapper">
+			<div class="ad">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390" crossorigin="anonymous"></script>
+<!-- responsive -->
+<ins class="adsbygoogle"
+style="display:block"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="8260216639"
+data-ad-format="auto"
+data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+			<main class="gapchildren padding">
+				<section class="gapchildren">
+					<h1>LuaU Obfuscator</h1>
+					<p>Built to protect Roblox Lua scripts</p>
+					<textarea id="lua-editor"></textarea>
+					<button class="btn-obfuscate border1 round padding button">Obfuscate</button>
+					<div class="verticalCenter btns-output">
+						<button class="btn-copy border1 round padding button" onclick="copyScript()">Copy</button>
+						<button class="btn-downloadscript border1 round padding button" onclick="downloadScript()">Download</button>
+						<button class="btn-newscript border1 round padding button" onclick="newScript()">New Script</button>
+					</div>
+					<p class="status"></p>
+				</section>
+				<section class="gapchildren">
+					<h2>What is an obfuscator?</h2>
+					<p>
+						This tool allows you to obfuscate your code, making it harder for others to read and reverse-engineer. 
+						By transforming your source code into a more complex and unreadable format, you can help protect your 
+						intellectual property while maintaining functionality. Perfect for developers looking to add an extra 
+						layer of security to their scripts.
+					</p>
+					<img src="images/obfuscator/obfuscation-demo.webp"/>
+				</section>
+				<section class="gapchildren">
+					<h2>Why use an obfuscator?</h2>
+					<ul>
+						<li><strong>Code Security</strong> – Prevents reverse engineering and unauthorized modifications.</li>
+						<li><strong>Intellectual Property Protection</strong> – Safeguards proprietary algorithms and business logic.</li>
+						<li><strong>Anti-Tampering</strong> – Makes it harder for attackers to modify or exploit your software.</li>
+						<li><strong>Reduced Readability</strong> – Converts code into an obscure format while keeping it functional.</li>
+						<li><strong>License Enforcement</strong> – Helps deter unauthorized use of software by making it difficult to bypass restrictions.</li>
+					</ul>
+					<p>
+						If you're distributing your software and want to maintain control over its integrity, using an obfuscator is a smart choice.
+					</p>
+				</section>
+				<section class="gapchildren">
+					<h2>Is this safe to use?</h2>
+					<p>
+						Yes, this obfuscator is designed to transform your code without altering its functionality. It does not 
+						store, transmit, or share your code in any way. Everything happens securely 
+						on the server, ensuring your code remains private and protected.
+					</p>
+					<p>
+						However, obfuscation is not a foolproof security measure. While it makes code harder to read and modify, 
+						determined attackers may still attempt to deobfuscate it. For sensitive applications, consider combining 
+						obfuscation with other security practices such as encryption and proper access controls.
+					</p>
+					<div class="lessgapchildren">
+						<p>The obfuscation process is handled securely using Prometheus Lua Obfuscator, a widely trusted open-source obfuscation tool.</p>
+						<p>Prometheus is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0), ensuring transparency and security in its implementation. We have not modified its source code but use it as a backend tool for obfuscation.</p>
+						<p>For full transparency, you can access the Prometheus source code here: ➡ <a href="https://github.com/wcrddn/Prometheus" class="link">GitHub Repository</a></p>
+						<p>For more information about the AGPL-3.0 license, visit: ➡ <a href="https://github.com/prometheus-lua/Prometheus/blob/a4b00a2395e9982298fe76c7b055c755df25e6e9/LICENSE" class="link">GNU AGPL-3.0 License Details</a></p>
+					</div>
+				</section>
+			</main>
+			<div class="ad">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390" crossorigin="anonymous"></script>
+<!-- responsive -->
+<ins class="adsbygoogle"
+style="display:block"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="8260216639"
+data-ad-format="auto"
+data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+		</div>
+		<style>
+footer{
+	margin-top: 50px;
+	padding: 10px 50px;
+	color: gray;
+	text-align: center;
+}
+
+.footerlinks{
+	display: inline-flex;
+	padding: 0;
+}
+
+.footerlinks li{
+	list-style-type: none;
+	margin-left: 12px;
+}
+
+.footerlinks li:first-of-type{
+	margin: 0;
+}
+
+/* Slider */
+.switch{
+	margin-left: var(--less-padding);
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 28px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 25px;
+}
+
+.slider:before{
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .3s;
+	transition: .3s;
+	border-radius: 50%;
+}
+
+.switch input:checked + .slider:before{
+  	margin-left: 22px;
+}
+
+.switch input:checked + .slider{
+    background-color: #2ecc71;
+}
+</style>
+<footer>
+	<ul class="footerlinks">
+		<li><a href="http://wearedevs.net/terms-of-service" title="Privacy Policy">Terms of Use</a></li>
+		<li><a href="http://wearedevs.net/privacy" title="Privacy Policy">Privacy</a></li>
+	</ul>
+	<br/>
+	<br/>
+	<p>© <script>document.write(new Date().getFullYear())</script> WeAreDevs</p>
+</footer>
+
+		<!-- CodeMirror JS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/lua/lua.min.js"></script>
+	
+		<script>
+			const editor = CodeMirror.fromTextArea(document.getElementById("lua-editor"), {
+				mode: "lua",
+				theme: "monokai",
+				lineNumbers: true,
+				indentUnit: 4,
+				tabSize: 4,
+				lineWrapping: true
+			});
+
+			const textarea = document.querySelector("textarea")
+			const button = document.querySelector(".btn-obfuscate")
+
+			button.addEventListener("click", () => {
+				let text = editor.getValue()
+				if (text.length < 1) return alert("Please enter some text to obfuscate.")
+				editor.setValue("Obfuscating...")
+				showStatus("Obfuscating your script, please wait...")
+				fetch("/api/obfuscate", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ script: text })
+				})
+				.then(res => res.json()).then(data => {
+					if (data.error) return alert(data.error)
+					editor.setValue(data.obfuscated)
+					showStatus("Obfuscation complete! You can now copy or download your script.", true)
+					button.style.display = "none"
+					document.querySelector(".btns-output").style.display = "flex"
+				})
+				.catch(() => {
+					showStatus("An error occurred while obfuscating your script. Please try again later.")
+				})
+			})
+
+			function copyScript() {
+				const script = editor.getValue();
+				navigator.clipboard.writeText(script).then(() => {
+					showStatus("Script copied to clipboard!", true); // Show status message
+				})
+			}
+
+			function downloadScript(){
+				const script = editor.getValue();
+				if (!script || script.length === 0) {
+					alert("No script to download!");
+					return;
+				}
+				const blob = new Blob([script], { type: "text/plain;charset=utf-8" });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = `obfuscated_script-${Date.now()}.lua`; // Default filename
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url); // Clean up the URL object
+			}
+
+			function newScript() {
+				editor.setValue(""); // Clear the editor
+				document.querySelector(".btns-output").style.display = "none"; // Hide output buttons
+				button.style.display = "block"; // Show the obfuscate button again
+			}
+
+			let statusTimeout
+			function showStatus(message, autoclear) {
+				if(statusTimeout) clearTimeout(statusTimeout)
+				const statusElement = document.querySelector(".status");
+				statusElement.textContent = message
+				statusElement.style.opacity = 1
+
+				if(autoclear) statusTimeout = setTimeout(() => {
+					statusElement.style.opacity = 0
+				}, 5000); // Hide after 5 seconds
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Roblox Exploits, Hacks, Cheats, and Executors - WeAreDevs</title>
+        <meta name="description" content="Best website for Roblox exploits, a developers community, and more from WeAreDevs." />
+		<meta name="keywords" content="exploit, exploits, hack, hacks, cheats, developers, social, media, best, library, source, wearedevs, catalogue" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+		<meta charset="utf-8">
+		
+		<link rel="shortcut icon" href="http://wearedevs.net/favicon.ico" />
+<link href="http://wearedevs.net/css/main.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/themes/night.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/navheader.css?v=26&amp;v2=5" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://wearedevs.net/js/timestamp.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46VWDGRLXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46VWDGRLXJ');
+</script>
+		<link href="css/exploits.css@v=26&amp;v2=9.css" rel="stylesheet" type="text/css">
+	</head>
+	<body class="container gapchildren">
+		<header id="navigationbar" class="border1-bottom">
+    <span class="menu-toggle "></span>
+    <a id="foologo" href="http://wearedevs.net/home" title="WeAreDevs">WeAreDevs</a>
+    <ul class="navItems">
+        <li class='navItem'>
+            <a href="index.html" title="Featured releases page">Exploits</a>
+        </li>
+        <li class='navItem'>
+            <a href="scripts.html" title="Featured scripts page">Scripts</a>
+        </li>
+        <li class='navItem'>
+            <a href="obfuscator.html" title="Protect your LuaU scripts">Lua Obfuscator</a>
+        </li>
+        <li class='navItem'>
+			<a title="Speak with the community" href="https://forum.wearedevs.net" class="icon community"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Visual demonstration of our exploits" href="https://www.youtube.com/@WeAreDevsExploits" class="icon youtube"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Alternative contact with the community" href="discord.html" class="icon discord"></a>
+        </li>
+        
+        <li class='navItem' style="margin-left: auto;"><a href="https://forum.wearedevs.net/login">Login</a></li>
+        
+    </ul>
+	
+	<script>
+        //Used to send logout request to API
+		function logout(){
+            if(!confirm("You are about to logout")) return
+
+            fetch('https://forum.wearedevs.net/api/account/logout', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) window.location.reload()
+                else {
+                    if(res.reason) alert("Error: " + res.reason)
+                    else alert("An unexpected error occured...")
+                }
+            })
+            .catch(()=>alert("Failed to contact the server or an unexpected response was received..."))
+        }
+
+        function DeleteNotifications(id){
+            return fetch('/api/notifications', {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id
+                })
+            })
+        }
+        
+        function DeleteAllNotifs(el){
+            //The server will default to delete everything because there is no specified id
+            DeleteNotifications()
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    document.getElementsByClassName("notifications")[0].innerHTML = "<p>No notifications...</p>"
+                    document.getElementsByClassName("notifcount")[0].style.display = "none"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                    el.style.display = "none"
+                }
+                //There should never be an error response
+                else alert("Failed to delete notification. Please contact an admin!")
+            })
+            .catch(e => alert("Failed to contact server"))
+        }
+
+        // Listen to all clicks on the document
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('message-notif')){
+                var parent = event.target.parentElement.parentElement
+                var id = parent.getAttribute("data-id")
+
+                DeleteNotifications(id)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success === true){
+                        var numNotifs = parent.parentElement.childElementCount
+                        document.getElementsByClassName("notifcount")[0].innerHTML = numNotifs - 1
+                        if(numNotifs <= 1){
+                            parent.parentElement.innerHTML = "No notifications"
+                            document.getElementsByClassName("notifcount")[0].remove()
+                            document.getElementsByClassName("deleteallnotifs")[0].remove()
+                            document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                        }
+                        parent.remove()
+                    }
+                })
+                .catch(e =>{})
+            }
+            //Navigation options display toggle (Mobile view)
+            else if(event.target.classList.contains('menu-toggle')){
+                if(document.getElementsByClassName("navItems")[0].style.display !== "flex"){
+                    document.getElementsByClassName("navItems")[0].style.display = "flex"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                }
+                else {
+                    document.getElementsByClassName("navItems")[0].style.display = "none"
+                    if(document.getElementsByClassName("notification").length > 0) 
+                        document.getElementsByClassName("menu-toggle")[0].classList.add("menu-toggle-notif")
+                }
+            }
+            //Drop-menu toggle
+            else if(event.target.classList.contains('dropmenu-title')){
+                if(event.target.parentElement.getElementsByClassName("menu")[0].style.display !== "block"){
+                    event.target.parentElement.getElementsByClassName("menu")[0].style.display = "block"
+                }
+                else event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+
+                event.target.parentElement.onmouseleave = () => event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+            } 
+        })
+    </script>
+</header>
+		
+		<main>
+			<div>
+				
+				<div class="boxad" style="display:flex; flex-direction:column;padding-left:0;">
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+					<a class="border1 round plug-link" href="scripts.html">Featured Scripts</a>
+					<a class="border1 round plug-link" href="http://wearedevs.net/forum/scripts">Community Scripts</a>
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+					<a class="border1 round plug-link" href="http://wearedevs.net/home#submission" target="_blank">Submit Your Content</a>
+					<a class="border1 round plug-link" href="http://wearedevs.net/forum/debugging">Search For Help</a>
+					<a class="border1 round plug-link" href="http://wearedevs.net/forum/complaints">Report A Problem</a>
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+					
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+				</div>
+				
+				<div class="releases-header padding">
+					<h1>All Exploits</h1>
+					<p>Download Roblox exploits and cheats for free</p>
+				</div>
+				<div class="padding releases">
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/jjsploit-031425.webp" alt="JJSploit logo">
+								<h2 class="downloadTitle">JJSploit</h2>
+							</div>
+							<p class="description">Lua executor, click teleport, ESP, speed, fly, infinite jump, aimbot, and so much more. A powerful all in one package</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>62.1m+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/JJSploit.html" title="Download JJSploit">Download</a>
+						</div>
+					</div>
+
+</div>
+				<div class="padding releases">
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://i.ibb.co/GfK50BPW/impulse-logo-1.png" alt="Impulse logo">
+								<h2 class="downloadTitle">Impulse</h2>
+							</div>
+							<p class="description">UD! 100 UNC/SUNC, Keyless. Dominate Roblox with one of the most powerful Windows executors. Run nearly any script. No keys. No limits. Just performance.</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>1.4M+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/Impulse.html" title="Download Impulse">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/krnl.jpeg" alt="Krnl logo">
+								<h2 class="downloadTitle">Krnl</h2>
+							</div>
+							<p class="description">UNDETECTED!! 100 sUNC!!! 24 hour keys, getconnections, saveinstance, gethiddenproperty, full debug library. Can run any script!</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								
+								
+								<span class="android" title="Available on Android phones"></span>
+								
+								
+								<span class="ios" title="Available on iPhone"></span>
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>29.9m+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/Krnl.html" title="Download Krnl">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/solara-1209242.webp" alt="Solara logo">
+								<h2 class="downloadTitle">Solara</h2>
+							</div>
+							<p class="description">Keyless script executor with a relatively long time running reputation. The First &amp; Best External Executor After Byfron.</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>3.6m+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/Solara" title="Download Solara">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/multiple rbx games.webp" alt="Multiple Games logo">
+								<h2 class="downloadTitle">Multiple Games</h2>
+							</div>
+							<p class="description">Usually, you are limited to having only one game open. With this, you can open as many games as you want. 100 games if you felt like</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>14.4m+</p>
+								
+							</div>
+							
+							<a class="moreinfo-card-button verticalCenter icon-info" 
+							
+							href="dInfo/Multiple&#32;Games.html"
+							
+							target="_blank"
+							title="Learn more about Multiple Games"></a>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/Multiple&#32;Games" title="Download Multiple Games">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/cheathub-051925.webp" alt="CheatHub logo">
+								<h2 class="downloadTitle">CheatHub</h2>
+							</div>
+							<p class="description">Keyless, installerless, and bootstrapperless. A minimal and extremely safe Lua executor powered by the WeAreDevs API!</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>24.1k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/CheatHub.html" title="Download CheatHub">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.discordapp.com/icons/1221935816515911850/95623e9119884bba927e18d579f2cf78.webp" alt="Delta logo">
+								<h2 class="downloadTitle">Delta</h2>
+							</div>
+							<p class="description">ALL SCRIPTS WORK! Free and Easy to use with 1 AD ONLY! Everyones Favorite Choice On Mobile!</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								
+								
+								<span class="android" title="Available on Android phones"></span>
+								
+								
+								<span class="ios" title="Available on iPhone"></span>
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>652.5k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/Delta.html" title="Download Delta">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/ronix-011925.png" alt="Ronix logo">
+								<h2 class="downloadTitle">Ronix</h2>
+							</div>
+							<p class="description">Ronix Executor Free, Keyless &amp; Works on Android and Windows</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								<span class="android" title="Available on Android phones"></span>
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>225.5k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/Ronix.html" title="Download Ronix">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/hydrogen.webp" alt="Hydrogen logo">
+								<h2 class="downloadTitle">Hydrogen</h2>
+							</div>
+							<p class="description">Hydrogen is a fast, secure macOS tool with native Apple Silicon support, Luau IntelliSense, a decompiler, and 96 percent sUNC.</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								
+								<span class="macos" title="Available on macOS"></span>
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>3.9k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/Hydrogen.html" title="Download Hydrogen">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/fluxus.webp" alt="Fluxus logo">
+								<h2 class="downloadTitle">Fluxus</h2>
+							</div>
+							<p class="description">Fluxus is back up and running, returning with a top tier executor for Android.</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								
+								
+								<span class="android" title="Available on Android phones"></span>
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>22.7k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/Fluxus" title="Download Fluxus">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/SubZero-051625.webp" alt="SubZero logo">
+								<h2 class="downloadTitle">SubZero</h2>
+							</div>
+							<p class="description">SubZero, A Powerful Keyless IDE Experience with inbuilt themes!</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								<span class="android" title="Available on Android phones"></span>
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>250.9k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/SubZero.html" title="Download SubZero">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/drift.webp" alt="Drift logo">
+								<h2 class="downloadTitle">Drift</h2>
+							</div>
+							<p class="description">EVERYTHING WORKS, No Key,  100 UNC! Instant inject and execute and beautiful UI</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>189.2k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="d/Drift.html" title="Download Drift">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/plutora-52525.webp" alt="Plutora logo">
+								<h2 class="downloadTitle">Plutora</h2>
+							</div>
+							<p class="description">Experience Execution With Glow. It includes an Amazing Web Based Interface, Cloud Script Hub and Amazing Tab System.</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>6.3k+</p>
+								
+							</div>
+							
+							<a class="moreinfo-card-button verticalCenter icon-info" 
+							
+							href="https://forum.wearedevs.net/t/37283"
+							
+							target="_blank"
+							title="Learn more about Plutora"></a>
+							
+							<a class="lessRound release-card-button" href="d/Plutora.html" title="Download Plutora">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/lx63.webp" alt="LX63 logo">
+								<h2 class="downloadTitle">LX63</h2>
+							</div>
+							<p class="description">LX63 IS BACK!!, Keyless. Instant Inject And Instant Execute, No Crashes. Can Run Every Script! Everything WORKS!!</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>13.3k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/LX63" title="Download LX63">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/autoclicker.jpeg" alt="Autoclicker logo">
+								<h2 class="downloadTitle">Autoclicker</h2>
+							</div>
+							<p class="description">Makes your computer click itself up to 1500 clicks per second. Useful for click farming</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>135.6k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/Autoclicker" title="Download Autoclicker">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/lagswitch-small.jpeg" alt="Lagswitch logo">
+								<h2 class="downloadTitle">Lagswitch</h2>
+							</div>
+							<p class="description">Freeze time to appear as if you are teleporting. In some games, you can dump ammo and appear to insta kill. Universal for all PC games!</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>638.1k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/Lagswitch" title="Download Lagswitch">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								
+								<img src="https://cdn.wearedevs.net/images/thumbnails/code-ui-wearedevs-exploit-api.jpeg" alt="Exploit API logo">
+								<h2 class="downloadTitle">Exploit API</h2>
+							</div>
+							<p class="description">An incredibly easy solution that lets novices and pros make powerful content. Used to make some of the most popular exploits</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								
+								
+								
+								
+								<p class="verticalCenter"><span class="icon-download"></span>1.2m+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" href="http://wearedevs.net/d/Exploit&#32;API" title="Download Exploit API">Download</a>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div>
+				<div class="releases-header padding">
+					<h1>Others</h1>
+					<p>Tools to support cheats</p>
+				</div>
+				<div class="releases padding">
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/DLL%20Injector.png" alt="DLL Injector" title="DLL Injector">
+								<h2 class="downloadTitle">DLL Injector</h2>
+							</div>
+							<p class="description">Feature packed injector used to map DLL based cheats into games for both 64bit and 32bit</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>1.3m+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/DLL&#32;Injector" 
+							title="Download DLL Injector">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/winrar.png" alt="WinRar" title="WinRar">
+								<h2 class="downloadTitle">WinRar</h2>
+							</div>
+							<p class="description">This is used to open archived files such as .rar and .zip files</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>314.5k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/WinRar" 
+							title="Download WinRar">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/general-tool.jpeg" alt="Defender Control" title="Defender Control">
+								<h2 class="downloadTitle">Defender Control</h2>
+							</div>
+							<p class="description">Open source Windows Defender disabler</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>185.3k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/Defender&#32;Control" 
+							title="Download Defender Control">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/dllinjector.png" alt="Extreme Injector" title="Extreme Injector">
+								<h2 class="downloadTitle">Extreme Injector</h2>
+							</div>
+							<p class="description">Typically used to inject dll based exploits into programs</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>1.1m+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/Extreme&#32;Injector" 
+							title="Download Extreme Injector">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/autoshutdown.png" alt="Shutdown Timer" title="Shutdown Timer">
+								<h2 class="downloadTitle">Shutdown Timer</h2>
+							</div>
+							<p class="description">This shuts down your computer after a set amount of time. Useful for downloading gigabytes worth of games while you're asleep</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>85.1k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/Shutdown&#32;Timer" 
+							title="Download Shutdown Timer">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/cheatengine.png" alt="NOPDE Engine" title="NOPDE Engine">
+								<h2 class="downloadTitle">NOPDE Engine</h2>
+							</div>
+							<p class="description">Most games have anti-cheat systems that block Cheat Engine. This is a version of Cheat Engine which often bypasses that check(If you set correct settings)</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>449.3k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/NOPDE&#32;Engine" 
+							title="Download NOPDE Engine">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/notepad++.png" alt="Notepad" title="Notepad">
+								<h2 class="downloadTitle">Notepad</h2>
+							</div>
+							<p class="description">Notepad++ is my favorite text editor for general use and coding purposes. Supports most of the popular languages</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>45.2k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="d/Notepad.html" 
+							title="Download Notepad">Download</a>
+						</div>
+					</div>
+					
+					
+					<div class="round border1 downloadOption">
+						<div>
+							<div class="round thumbnail">
+								<img src="https://cdn.wearedevs.net/images/thumbnails/cs.jpeg" alt="Memory Edit Class" title="Memory Edit Class">
+								<h2 class="downloadTitle">Memory Edit Class</h2>
+							</div>
+							<p class="description">Used for basic external memory editing in C#</p>
+						</div>
+						<div class="download_metadata verticalCenter">
+							<div class="verticalCenter">
+								<span class="windows" title="Available on Windows PC"></span>
+								
+								<p class="verticalCenter"><span class="icon-download"></span>60.1k+</p>
+								
+							</div>
+							
+							<a class="lessRound release-card-button" 
+							href="http://wearedevs.net/d/Memory&#32;Edit&#32;Class" 
+							title="Download Memory Edit Class">Download</a>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</main>
+		<style>
+footer{
+	margin-top: 50px;
+	padding: 10px 50px;
+	color: gray;
+	text-align: center;
+}
+
+.footerlinks{
+	display: inline-flex;
+	padding: 0;
+}
+
+.footerlinks li{
+	list-style-type: none;
+	margin-left: 12px;
+}
+
+.footerlinks li:first-of-type{
+	margin: 0;
+}
+
+/* Slider */
+.switch{
+	margin-left: var(--less-padding);
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 28px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 25px;
+}
+
+.slider:before{
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .3s;
+	transition: .3s;
+	border-radius: 50%;
+}
+
+.switch input:checked + .slider:before{
+  	margin-left: 22px;
+}
+
+.switch input:checked + .slider{
+    background-color: #2ecc71;
+}
+</style>
+<footer>
+	<ul class="footerlinks">
+		<li><a href="http://wearedevs.net/terms-of-service" title="Privacy Policy">Terms of Use</a></li>
+		<li><a href="http://wearedevs.net/privacy" title="Privacy Policy">Privacy</a></li>
+	</ul>
+	<br/>
+	<br/>
+	<p>© <script>document.write(new Date().getFullYear())</script> WeAreDevs</p>
+</footer>
+	</body>
+</html>
