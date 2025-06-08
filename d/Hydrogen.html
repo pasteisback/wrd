@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=0">
+		<meta name="keywords" content="wearedevs download, krnl, krnl download, Exploits, dll, hacks, cheats, developers" />
+        <meta name="description" content="Hydrogen is a fast, secure macOS tool with native Apple Silicon support, Luau IntelliSense, a decompiler, and 96 percent sUNC." />
+	
+		<title>Hydrogen Executor - WeAreDevs</title>
+		
+		<link rel="shortcut icon" href="http://wearedevs.net/favicon.ico" />
+<link href="http://wearedevs.net/css/main.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/themes/night.css?v=26&amp;v2=3" rel="stylesheet" type="text/css">
+<link href="http://wearedevs.net/css/navheader.css?v=26&amp;v2=5" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://wearedevs.net/js/timestamp.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-46VWDGRLXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-46VWDGRLXJ');
+</script>
+        <link href="../css/dinfo/hydrogen.css@v=26&amp;v2=10.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+	</head>
+	<body class="container">
+		<header id="navigationbar" class="border1-bottom">
+    <span class="menu-toggle "></span>
+    <a id="foologo" href="http://wearedevs.net/home" title="WeAreDevs">WeAreDevs</a>
+    <ul class="navItems">
+        <li class='navItem'>
+            <a href="../index.html" title="Featured releases page">Exploits</a>
+        </li>
+        <li class='navItem'>
+            <a href="../scripts.html" title="Featured scripts page">Scripts</a>
+        </li>
+        <li class='navItem'>
+            <a href="../obfuscator.html" title="Protect your LuaU scripts">Lua Obfuscator</a>
+        </li>
+        <li class='navItem'>
+			<a title="Speak with the community" href="https://forum.wearedevs.net" class="icon community"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Visual demonstration of our exploits" href="https://www.youtube.com/@WeAreDevsExploits" class="icon youtube"></a>
+        </li>
+        <li class='navItem'>
+			<a title="Alternative contact with the community" href="../discord.html" class="icon discord"></a>
+        </li>
+        
+        <li class='navItem' style="margin-left: auto;"><a href="https://forum.wearedevs.net/login">Login</a></li>
+        
+    </ul>
+	
+	<script>
+        //Used to send logout request to API
+		function logout(){
+            if(!confirm("You are about to logout")) return
+
+            fetch('https://forum.wearedevs.net/api/account/logout', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) window.location.reload()
+                else {
+                    if(res.reason) alert("Error: " + res.reason)
+                    else alert("An unexpected error occured...")
+                }
+            })
+            .catch(()=>alert("Failed to contact the server or an unexpected response was received..."))
+        }
+
+        function DeleteNotifications(id){
+            return fetch('/api/notifications', {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id
+                })
+            })
+        }
+        
+        function DeleteAllNotifs(el){
+            //The server will default to delete everything because there is no specified id
+            DeleteNotifications()
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    document.getElementsByClassName("notifications")[0].innerHTML = "<p>No notifications...</p>"
+                    document.getElementsByClassName("notifcount")[0].style.display = "none"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                    el.style.display = "none"
+                }
+                //There should never be an error response
+                else alert("Failed to delete notification. Please contact an admin!")
+            })
+            .catch(e => alert("Failed to contact server"))
+        }
+
+        // Listen to all clicks on the document
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('message-notif')){
+                var parent = event.target.parentElement.parentElement
+                var id = parent.getAttribute("data-id")
+
+                DeleteNotifications(id)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success === true){
+                        var numNotifs = parent.parentElement.childElementCount
+                        document.getElementsByClassName("notifcount")[0].innerHTML = numNotifs - 1
+                        if(numNotifs <= 1){
+                            parent.parentElement.innerHTML = "No notifications"
+                            document.getElementsByClassName("notifcount")[0].remove()
+                            document.getElementsByClassName("deleteallnotifs")[0].remove()
+                            document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                        }
+                        parent.remove()
+                    }
+                })
+                .catch(e =>{})
+            }
+            //Navigation options display toggle (Mobile view)
+            else if(event.target.classList.contains('menu-toggle')){
+                if(document.getElementsByClassName("navItems")[0].style.display !== "flex"){
+                    document.getElementsByClassName("navItems")[0].style.display = "flex"
+                    document.getElementsByClassName("menu-toggle-notif")[0].classList.remove("menu-toggle-notif")
+                }
+                else {
+                    document.getElementsByClassName("navItems")[0].style.display = "none"
+                    if(document.getElementsByClassName("notification").length > 0) 
+                        document.getElementsByClassName("menu-toggle")[0].classList.add("menu-toggle-notif")
+                }
+            }
+            //Drop-menu toggle
+            else if(event.target.classList.contains('dropmenu-title')){
+                if(event.target.parentElement.getElementsByClassName("menu")[0].style.display !== "block"){
+                    event.target.parentElement.getElementsByClassName("menu")[0].style.display = "block"
+                }
+                else event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+
+                event.target.parentElement.onmouseleave = () => event.target.parentElement.getElementsByClassName("menu")[0].style.display = "none"
+            } 
+        })
+    </script>
+</header>
+		<main>
+            <div class="section round border1">
+                <div id="intro">
+                    <img id="logo" class="round" src="https://cdn.wearedevs.net/images/thumbnails/hydrogen.webp">
+                    <div class="gapchildren" style="flex: 1">
+                        <h1>Hydrogen</h1>
+                        <p>Hydrogen natively supports both Intel and Apple Silicon Macs, allowing your game to run at full native performance. It’s the only tool on macOS with a hardware-accelerated drawing library using Metal, delivering smoother gameplay with less lag. Hydrogen achieves a <a href="https://sunc.rubis.app/?scrap=5qh7GIfCDb8WZjtp&key=3Hq4Uz3Oc3X9G34ROz12ODY4VJIwXuUH" target="_blank">96% sUNC score</a>, meaning it supports most scripts, and it blocks all dangerous functions with a 100% vulnerability mitigation score for maximum safety. It also includes a built-in Luau language server for IntelliSense support and a built-in decompiler.</p>
+                        <div class="command">
+                            <p>Install command:</p>
+                            <input class="less-padding lessRound border1 install-command" value="bash -c &quot;$(curl -fsSL https://www.hydrogen.lat/install)&quot;" onclick="CopyLoadstring()"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <img class="round ui" src="../images/hydrogen/ui.webp" alt="JJSploit home interface"/>
+			<br>
+			<div id="instructions" class="round border1 section">
+                <div>
+                    <h2>Instructions</h2>
+                    <br>
+                    <ol>
+                        <li>Press Command and Space on your computer. Search for “terminal” and press enter or click the icon to open it.</li>
+                        <li>Copy the install command, listed above, and paste it into your terminal. Press enter to begin the install.</li>
+                        <li>When asked for a “Password:”, type the password you use to login to your computer, you won’t be able to see the password when typing because of security, but you’re typing.</li>
+                        <li>When the installer says it’s finished, go to your applications and open the Hydrogen-M app.</li>
+                        <li>Join a game in Roblox, and paste a script into the Hydrogen-M app. Then click the “Run Script” button.</li>
+                    </ol>
+                </div>
+                <div class="adbox">
+                    
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+                </div>
+			</div>
+            <br>
+			<div id="faq" class="section round border1">
+				<div>
+                    <h2>FAQ</h2>
+                    <br>
+                    <div class="qa">
+                        <p class="q">How is this free?</p>
+                        <p class="a">You don't need to pay a dime, although you may run into advertisements, which help support the creator.</p>
+                    </div>
+                    <hr>
+                    <div class="qa">
+                        <p class="q">Why do I need to run an install script?</p>
+                        <p class="a">MacOS makes it really tricky to install apps outside of the App Store, and in order to ensure everyone can use Hydrogen, an install script makes it a lot simpler.</p>
+                    </div>
+                    
+                    <hr>
+                    <div class="qa">
+                        <p class="q">Where can I get support?</p>
+                        <p class="a">You can ask for help or read around for more information on their <a href="https://discord.gg/gethydrogen" target="_blank">Discord server</a>. Remember, support is a privelege, not an obligation.</p>
+                    </div>
+                    
+                </div>
+                <div class="adbox">
+                    
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9142841210062390"
+crossorigin="anonymous"></script>
+<!-- Box -->
+<ins class="adsbygoogle"
+style="display:inline-block;width:300px;height:250px"
+data-ad-client="ca-pub-9142841210062390"
+data-ad-slot="3739798263"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+                </div>
+			</div>
+		</main>
+		<style>
+footer{
+	margin-top: 50px;
+	padding: 10px 50px;
+	color: gray;
+	text-align: center;
+}
+
+.footerlinks{
+	display: inline-flex;
+	padding: 0;
+}
+
+.footerlinks li{
+	list-style-type: none;
+	margin-left: 12px;
+}
+
+.footerlinks li:first-of-type{
+	margin: 0;
+}
+
+/* Slider */
+.switch{
+	margin-left: var(--less-padding);
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 28px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 25px;
+}
+
+.slider:before{
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .3s;
+	transition: .3s;
+	border-radius: 50%;
+}
+
+.switch input:checked + .slider:before{
+  	margin-left: 22px;
+}
+
+.switch input:checked + .slider{
+    background-color: #2ecc71;
+}
+</style>
+<footer>
+	<ul class="footerlinks">
+		<li><a href="http://wearedevs.net/terms-of-service" title="Privacy Policy">Terms of Use</a></li>
+		<li><a href="http://wearedevs.net/privacy" title="Privacy Policy">Privacy</a></li>
+	</ul>
+	<br/>
+	<br/>
+	<p>© <script>document.write(new Date().getFullYear())</script> WeAreDevs</p>
+</footer>
+		
+		<script>
+            $(document).ready(function(){
+                $('.carouselshow').slick({
+                    autoplay: true,
+                    centerMode: true,
+                    variableWidth: true,
+                    prevArrow: null,
+                    nextArrow: null,
+                });
+            })
+			
+            let tracked = false
+            function CopyLoadstring() {
+				var copyText = document.querySelector(".install-command");
+				copyText.select();
+				copyText.setSelectionRange(0, 99999);
+				document.execCommand("copy");
+
+				if(!tracked) {
+                    tracked = true
+                    gtag('event', 'download software - Hydrogen', {
+                        event_category: 'download software'
+                    })
+                }
+			}
+		</script>
+	</body>
+</html>
