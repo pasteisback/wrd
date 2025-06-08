@@ -1,0 +1,48 @@
+:root{
+    --color-background: #16141c;
+    --color-background-weak: #1e2130;
+    --color-accent: #3498DB;
+    --color-secondary: #34384e;
+    --color-highlight: rgba(52, 56, 78, 0.5);
+}
+
+body{
+    background-color:  var(--color-background);
+    color: #ECF0F1;
+}
+
+.theme1{
+    background-color: var(--color-background);
+}
+
+
+.theme2{
+    background-color: var(--color-secondary);
+}
+
+.border1{
+    border: 1px solid var(--color-secondary);
+}
+
+.border1-left{
+    border-left: 1px solid var(--color-secondary);
+}
+
+.border1-bottom{
+    border-bottom: 1px solid var(--color-secondary);
+}
+
+input, select, option, button, textarea {
+    background-color: var(--color-background);
+}
+
+/* Custom TinyMCE Dark Theme*/
+
+.tox-toolbar__primary, .tox-statusbar, .tox-menu, .tox-dialog, .tox-dialog__header, .tox-selectfield select, 
+.tox-textarea, .tox-dialog__footer{
+    background-color: #232527 !important;
+}
+
+code[class*="language-"], pre[class*="language-"]{
+    background-color: var(--color-secondary);
+}
